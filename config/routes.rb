@@ -11,5 +11,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root "players#show"
+  root 'players#show'
 end

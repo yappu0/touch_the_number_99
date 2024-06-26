@@ -1,0 +1,6 @@
+inherit_gem:
+  sgcop: rails/rubocop.yml
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
