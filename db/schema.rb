@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_26_085346) do
     t.string "name", default: "", null: false
     t.integer "clear_count", default: 0, null: false
     t.string "status", default: "waiting", null: false
-    t.string "session_token", default: "", null: false
+    t.string "player_token", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
