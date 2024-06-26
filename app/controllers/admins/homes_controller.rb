@@ -3,7 +3,7 @@ class Admins::HomesController < ApplicationController
   end
 
   def game_start
-    Game.start
+    Game.start!
     redirect_to admins_home_url, notice: 'ゲームを開始しました'
   end
 end

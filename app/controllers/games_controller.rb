@@ -1,12 +1,24 @@
 class GamesController < ApplicationController
-  before_action :set_player, only: %i[wait watch]
+  before_action :set_player, only: %i[show wait watch finish]
+  before_action :set_game, only: %i[show wait finish]
+  before_action :redirect_to_root_if_no_game, only: %i[show finish]
   before_action :authenticate_player
-  before_action :started?, only: %i[wait]
+
+  def show
+  end
 
   def wait
+    redirect_to watch_game_path if @game.present?
+    @player.update_columns(status: :waiting)
   end
 
   def watch
+    @player.update_columns(status: :watching)
+  end
+
+  def finish
+    @game.finish!(@player)
+    render json: { status: 'success' }
   end
 
   private
@@ -15,16 +27,15 @@ class GamesController < ApplicationController
     @player = Player.find_by(player_token: session[:player_token])
   end
 
-  def authenticate_player
-    redirect_to root_path if @player.blank?
+  def set_game
+    @game = Game.in_progress.last
   end
 
-  def started?
-    if Player.where(status: :playing).exists?
-      @player.update!(status: :watching)
-      redirect_to watch_game_path
-    else
-      @player.update!(status: :waiting)
-    end
+  def redirect_to_root_if_no_game
+    redirect_to root_path if @game.blank?
+  end
+
+  def authenticate_player
+    redirect_to root_path if @player.blank?
   end
 end
