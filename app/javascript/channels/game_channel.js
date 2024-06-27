@@ -9,43 +9,43 @@ document.addEventListener('turbo:load', () => {
   this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
 
   consumer.subscriptions.create(
-    {
-      channel: 'GameChannel',
-      player_id: this.player_id,
-    },
-    {
-      connected() {
-        this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
-        console.log('Connected to GameChannel');
+      {
+        channel: 'GameChannel',
+        player_id: this.player_id,
       },
+      {
+        connected() {
+          this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
+          console.log('Connected to GameChannel');
+        },
 
-      disconnected() {
-        console.log('Disconnected from GameChannel');
-      },
+        disconnected() {
+          console.log('Disconnected from GameChannel');
+        },
 
-      received(data) {
-        console.log('Received data', data);
+        received(data) {
+          console.log('Received data', data);
 
-        if (data.action === 'game_start') {
-          window.location.href = '/game';
-        }
+          if (data.action === 'game_start') {
+            window.location.href = '/game';
+          }
 
-        if (data.action === 'game_over') {
-          alert(`Game Over! The winner is ${data.winner}`);
-          window.location.href = '/player';
-        }
+          if (data.action === 'game_over') {
+            alert(`Game Over! The winner is ${data.winner}`);
+            window.location.href = '/player';
+          }
 
-        if (data.action === 'game_won') {
-          alert('Congratulations! You won!!!');
-          window.location.href = '/player';
-        }
+          if (data.action === 'game_won') {
+            alert('Congratulations! You won!!!');
+            window.location.href = '/player';
+          }
 
-        if (data.action === 'attack') {
-          console.log('Attack received');
-          attack(data.count.count);
-        }
-      },
-    }
+          if (data.action === 'attack') {
+            console.log('Attack received');
+            attack(data.count.count);
+          }
+        },
+      }
   );
 });
 
@@ -72,12 +72,15 @@ const shuffle = (count) => {
   const fragment = document.createDocumentFragment();
   selectedButtons.forEach((button) => fragment.appendChild(button));
   parent.appendChild(fragment);
+  applyRandomAnimation(selectedButtons);
 };
 
 const smallFont = (count) => {
-  getRandomButtons(count).forEach((button) => {
+  const selectedButtons = getRandomButtons(count);
+  selectedButtons.forEach((button) => {
     button.style.fontSize = `${parseFloat(getComputedStyle(button).fontSize) * 0.5}px`;
   });
+  applyRandomAnimation(selectedButtons);
 };
 
 const convertToRoman = (count) => {
@@ -100,9 +103,11 @@ const convertToRoman = (count) => {
     }, '');
   };
 
-  getRandomButtons(count).forEach((button) => {
+  const selectedButtons = getRandomButtons(count)
+  selectedButtons.forEach((button) => {
     button.textContent = toRoman(parseInt(button.dataset.number));
   });
+  applyRandomAnimation(selectedButtons);
 };
 
 const convertToKanji = (count) => {
@@ -112,11 +117,12 @@ const convertToKanji = (count) => {
     if (num <= 10) return kanjiNumerals[num];
     if (num < 20) return '十' + (num % 10 !== 0 ? kanjiNumerals[num % 10] : '');
     return (
-      kanjiNumerals[Math.floor(num / 10)] + '十' + (num % 10 !== 0 ? kanjiNumerals[num % 10] : '')
+        kanjiNumerals[Math.floor(num / 10)] + '十' + (num % 10 !== 0 ? kanjiNumerals[num % 10] : '')
     );
   };
 
-  getRandomButtons(count).forEach((button) => {
+  const selectedButtons = getRandomButtons(count)
+  selectedButtons.forEach((button) => {
     const number = parseInt(button.dataset.number);
     button.textContent = toKanji(number);
     Object.assign(button.style, {
@@ -125,14 +131,29 @@ const convertToKanji = (count) => {
       lineHeight: '1',
     });
   });
+  applyRandomAnimation(selectedButtons);
 };
 
 const reverseText = (count) => {
-  getRandomButtons(count).forEach((button) => {
+  const selectedButtons = getRandomButtons(count)
+  selectedButtons.forEach((button) => {
     button.textContent = button.textContent.split('').reverse().join('');
     Object.assign(button.style, {
       transform: 'scaleX(-1)',
       display: 'inline-block',
     });
+  });
+  applyRandomAnimation(selectedButtons);
+};
+
+const applyRandomAnimation = (buttons) => {
+  const animations = ['shake-animation'];
+  const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+
+  buttons.forEach(button => {
+    button.classList.add(randomAnimation);
+    button.addEventListener('animationend', () => {
+      button.classList.remove(randomAnimation);
+    }, { once: true });
   });
 };
