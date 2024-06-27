@@ -6,7 +6,7 @@ export default class extends Controller {
 
   connect() {
     // TODO: 25に直す
-    this.numbers = Array.from({ length: 25 }, (_, i) => i + 1);
+    this.numbers = Array.from({ length: 5 }, (_, i) => i + 1);
     this.currentNumber = 1;
     this.clearCount = 0;
     this.replaceButtonCount = 1;
@@ -38,20 +38,13 @@ export default class extends Controller {
       event.currentTarget.disabled = true;
       this.currentNumber++;
 
-      setTimeout(() => {
-        const times = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-        for (let i = 0; i < 5; i++) {
-          this.postData('/game/attack', { count: this.replaceButtonCount });
-        }
-      }, 2000);
-
       // TODO: 25に直す
-      if (this.currentNumber > 25) {
+      if (this.currentNumber > 5) {
         this.initGameBoard();
         this.postData('/game/attack', { count: this.replaceButtonCount });
       }
       // TODO: 5に直す
-      if (this.clearCount === 5) {
+      if (this.clearCount === 2) {
         this.postData('/game/finish');
       }
     }
