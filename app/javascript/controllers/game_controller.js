@@ -44,7 +44,7 @@ export default class extends Controller {
         this.postData('/game/attack', { count: this.replaceButtonCount });
       }
       // TODO: 5に直す
-      if (this.clearCount === 2) {
+      if (this.clearCount === 10) {
         this.postData('/game/finish');
       }
     }
