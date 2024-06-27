@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     get :watch
     post :attack
     post :finish
+    post :tap
+    get :result
   end
   namespace :admins do
     resource :home, only: %i[show] do

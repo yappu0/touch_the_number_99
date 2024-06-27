@@ -5,47 +5,50 @@ document.addEventListener('turbo:load', () => {
     return;
   }
 
-  console.log('aaa');
   this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
 
   consumer.subscriptions.create(
-      {
-        channel: 'GameChannel',
-        player_id: this.player_id,
+    {
+      channel: 'GameChannel',
+      player_id: this.player_id,
+    },
+    {
+      connected() {
+        this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
+        console.log('Connected to GameChannel');
       },
-      {
-        connected() {
-          this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
-          console.log('Connected to GameChannel');
-        },
 
-        disconnected() {
-          console.log('Disconnected from GameChannel');
-        },
+      disconnected() {
+        console.log('Disconnected from GameChannel');
+      },
 
-        received(data) {
-          console.log('Received data', data);
+      received(data) {
+        console.log('Received data', data);
 
-          if (data.action === 'game_start') {
-            window.location.href = '/game';
-          }
+        if (data.action === 'game_start') {
+          window.location.href = '/game';
+        }
 
-          if (data.action === 'game_over') {
-            alert(`Game Over! The winner is ${data.winner}`);
-            window.location.href = '/player';
-          }
+        if (data.action === 'game_over') {
+          alert(`Game Over! The winner is ${data.winner}`);
+          window.location.href = '/player';
+        }
 
-          if (data.action === 'game_won') {
-            alert('Congratulations! You won!!!');
-            window.location.href = '/player';
-          }
+        if (data.action === 'finish') {
+          alert('ゲームクリア！集計までお待ちください');
+        }
 
-          if (data.action === 'attack') {
-            console.log('Attack received');
-            attack(data.count.count);
-          }
-        },
-      }
+        if (data.action === 'game_set') {
+          alert('ゲーム終了！結果発表です！');
+          window.location.href = '/game/result';
+        }
+
+        if (data.action === 'attack') {
+          console.log('Attack received');
+          attack(data.count.count);
+        }
+      },
+    }
   );
 });
 

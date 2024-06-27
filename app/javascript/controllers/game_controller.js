@@ -2,9 +2,9 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static targets = ['board'];
-  static values = { gameId: Number };
+  static values = { gameId: Number, playerId: Number };
 
-  connect() {
+  connect () {
     // TODO: 25に直す
     this.numbers = Array.from({ length: 5 }, (_, i) => i + 1);
     this.currentNumber = 1;
@@ -13,7 +13,7 @@ export default class extends Controller {
     this.createGameBoard();
   }
 
-  createGameBoard() {
+  createGameBoard () {
     this.shuffleArray(this.numbers);
     this.numbers.forEach((number) => {
       const button = document.createElement('button');
@@ -24,19 +24,20 @@ export default class extends Controller {
     });
   }
 
-  shuffleArray(array) {
+  shuffleArray (array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
 
-  handleNumberClick(event) {
+  handleNumberClick (event) {
     console.log('Number clicked:', event.currentTarget.dataset.number);
     const number = parseInt(event.currentTarget.dataset.number);
     if (number === this.currentNumber) {
       event.currentTarget.disabled = true;
       this.currentNumber++;
+      this.postData('/game/tap', { game_id: this.gameIdValue, player_id: this.playerIdValue });
 
       // TODO: 25に直す
       if (this.currentNumber > 5) {
@@ -50,7 +51,7 @@ export default class extends Controller {
     }
   }
 
-  initGameBoard() {
+  initGameBoard () {
     this.currentNumber = 1;
     this.clearCount++;
     this.replaceButtonCount++;
@@ -58,7 +59,7 @@ export default class extends Controller {
     this.createGameBoard();
   }
 
-  async postData(url = '', data = {}) {
+  async postData (url = '', data = {}) {
     try {
       await fetch(url, {
         url,
