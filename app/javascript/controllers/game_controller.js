@@ -37,6 +37,14 @@ export default class extends Controller {
     if (number === this.currentNumber) {
       event.currentTarget.disabled = true;
       this.currentNumber++;
+
+      setTimeout(() => {
+        const times = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+        for (let i = 0; i < 5; i++) {
+          this.postData('/game/attack', { count: this.replaceButtonCount });
+        }
+      }, 2000);
+
       // TODO: 25に直す
       if (this.currentNumber > 25) {
         this.initGameBoard();
