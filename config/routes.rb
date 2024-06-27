@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resource :game, only: %i[show] do
     get :wait
     get :watch
+    post :attack
     post :finish
   end
   namespace :admins do

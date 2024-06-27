@@ -4,14 +4,16 @@ export default class extends Controller {
   static targets = ['board'];
   static values = { gameId: Number };
 
-  connect () {
+  connect() {
     // TODO: 25に直す
     this.numbers = Array.from({ length: 5 }, (_, i) => i + 1);
     this.currentNumber = 1;
+    this.clearCount = 0;
+    this.replaceButtonCount = 1;
     this.createGameBoard();
   }
 
-  createGameBoard () {
+  createGameBoard() {
     this.shuffleArray(this.numbers);
     this.numbers.forEach((number) => {
       const button = document.createElement('button');
@@ -22,35 +24,49 @@ export default class extends Controller {
     });
   }
 
-  shuffleArray (array) {
+  shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
 
-  handleNumberClick (event) {
+  handleNumberClick(event) {
     console.log('Number clicked:', event.currentTarget.dataset.number);
     const number = parseInt(event.currentTarget.dataset.number);
     if (number === this.currentNumber) {
       event.currentTarget.disabled = true;
       this.currentNumber++;
+      // TODO: 25に直す
       if (this.currentNumber > 5) {
-        this.sendWinStatus();
+        this.initGameBoard();
+        this.postData('/game/attack', { count: this.replaceButtonCount });
+      }
+      // TODO: 5に直す
+      if (this.clearCount === 2) {
+        this.postData('/game/finish');
       }
     }
   }
 
-  async sendWinStatus () {
-    console.log('send win status');
+  initGameBoard() {
+    this.currentNumber = 1;
+    this.clearCount++;
+    this.replaceButtonCount++;
+    this.boardTarget.innerHTML = '';
+    this.createGameBoard();
+  }
+
+  async postData(url = '', data = {}) {
     try {
-      await fetch('/game/finish', {
+      await fetch(url, {
+        url,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
         },
-        body: JSON.stringify({ game_id: this.gameIdValue }),
+        body: JSON.stringify(data),
       });
     } catch (error) {
       console.error('Error:', error);
