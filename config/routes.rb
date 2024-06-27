@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     resource :home, only: %i[show] do
       post :game_start
     end
+    resource :player, only: %i[destroy]
+    resource :game, only: %i[destroy]
     root 'homes#show'
   end
 

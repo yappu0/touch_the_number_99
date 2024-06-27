@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
   extend Enumerize
 
-  enumerize :status, in: %i[in_progress finished], scope: :shallow
+  enumerize :status, in: %i[waiting in_progress finished], scope: :shallow
 
   validates :status, presence: true
 
@@ -11,17 +11,13 @@ class Game < ApplicationRecord
     elapsed_time = end_time - start_time
     player.update(status: 'finished')
     REDIS.set("elapsed_time:#{self.id}:#{player.id}", elapsed_time)
-    ActionCable.server.broadcast "player_#{player.id}_game_channel", { action: 'finish' }
+    ActionCable.server.broadcast "game_#{self.id}_player_#{player.id}_channel", { action: 'finish' }
     game_set if Player.finished.count * 2 > Player.playing.count
   end
 
   def game_set
     update_columns(status: 'finished')
-    Player.playing.or(Player.finished).find_each do |player|
-      p 'game_set'
-      p player.id
-      ActionCable.server.broadcast "player_#{player.id}_game_channel", { action: 'game_set' }
-    end
+    ActionCable.server.broadcast "game_#{self.id}_channel", { action: 'game_set' }
     Player.playing.update_all(status: 'finished')
     Player.watching.update_all(status: 'finished')
   end
@@ -30,7 +26,7 @@ class Game < ApplicationRecord
     return if status.finished?
 
     Player.playing.where.not(id: player.id).find_each do |opponent|
-      ActionCable.server.broadcast "player_#{opponent.id}_game_channel", { action: 'attack', count: }
+      ActionCable.server.broadcast "game_#{self.id}_player_#{opponent.id}_channel", { action: 'attack', count: }
     end
   end
 
@@ -43,24 +39,32 @@ class Game < ApplicationRecord
     end.sort_by { |_, elapsed_time| elapsed_time }
   end
 
-  def tap_ranking
-    REDIS.zrevrange("game:#{self.id}", 0, -1, with_scores: true)
-  end
-
   class << self
     def start!
-      game = Game.create(status: 'in_progress')
+      game = Game.waiting.last
+      game.update!(status: 'in_progress')
       Player.waiting.update_all(status: 'playing')
+      ActionCable.server.broadcast "game_#{game.id}_channel", { action: 'game_start', game_id: game.id }
+      start_time = Time.current.to_i.to_s
       Player.playing.find_each do |player|
-        ActionCable.server.broadcast "player_#{player.id}_game_channel", { action: 'game_start', game_id: game.id }
-        start_time = Time.current.to_i.to_s
         REDIS.set("start_time:#{game.id}:#{player.id}", start_time)
         REDIS.zadd("game:#{game.id}", 0, player.id)
       end
     end
 
+    def tap_ranking(game_id)
+      REDIS.zrevrange("game:#{game_id}", 0, -1, with_scores: true)
+    end
+
     def tap_square(game_id, user_id)
+      old_ranking = tap_ranking(game_id).slice(0, 5)
+      p old_ranking
       REDIS.zincrby("game:#{game_id}", 1, user_id)
+      new_ranking = tap_ranking(game_id).slice(0, 5)
+      p new_ranking
+      if old_ranking != new_ranking
+        ActionCable.server.broadcast "game_#{game_id}_channel", { action: 'tap', ranking: new_ranking }
+      end
     end
   end
 end
