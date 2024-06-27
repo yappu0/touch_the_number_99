@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
-  before_action :set_player, only: %i[show wait watch finish attack]
-  before_action :set_game, only: %i[show wait watch finish attack]
+  before_action :set_player, only: %i[show wait watch finish attack result]
+  before_action :set_game, except: %i[tap]
   before_action :redirect_to_root_if_no_game, only: %i[show finish]
   before_action :authenticate_player
 
@@ -24,6 +24,15 @@ class GamesController < ApplicationController
   def finish
     @game.finish!(@player)
     render json: { status: 'success' }
+  end
+
+  def tap
+    Game.tap_square(params[:game_id], params[:user_id])
+    render json: { status: 'tap' }
+  end
+
+  def result
+    @finished_game = Game.finished.last
   end
 
   private

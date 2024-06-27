@@ -5,7 +5,6 @@ document.addEventListener('turbo:load', () => {
     return;
   }
 
-  console.log('aaa');
   this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
 
   consumer.subscriptions.create(
@@ -14,16 +13,16 @@ document.addEventListener('turbo:load', () => {
       player_id: this.player_id,
     },
     {
-      connected() {
+      connected () {
         this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
         console.log('Connected to GameChannel');
       },
 
-      disconnected() {
+      disconnected () {
         console.log('Disconnected from GameChannel');
       },
 
-      received(data) {
+      received (data) {
         console.log('Received data', data);
 
         if (data.action === 'game_start') {
@@ -35,9 +34,13 @@ document.addEventListener('turbo:load', () => {
           window.location.href = '/player';
         }
 
-        if (data.action === 'game_won') {
-          alert('Congratulations! You won!!!');
-          window.location.href = '/player';
+        if (data.action === 'finish') {
+          alert('ゲームクリア！集計までお待ちください');
+        }
+
+        if (data.action === 'game_set') {
+          alert('ゲーム終了！結果発表です！');
+          window.location.href = '/game/result';
         }
 
         if (data.action === 'attack') {
@@ -45,7 +48,7 @@ document.addEventListener('turbo:load', () => {
           replaceButtons(data.count.count);
         }
       },
-    }
+    },
   );
 });
 
