@@ -42,33 +42,97 @@ document.addEventListener('turbo:load', () => {
 
         if (data.action === 'attack') {
           console.log('Attack received');
-          replaceButtons(data.count.count);
+          attack(data.count.count);
         }
       },
     }
   );
 });
 
-const replaceButtons = (count) => {
+const attack = (count) => {
+  const functions = [reverseText, convertToKanji, convertToRoman, smallFont, shuffle];
+
+  const randomIndex = Math.floor(Math.random() * functions.length);
+  const selectedFunction = functions[randomIndex];
+
+  selectedFunction(count);
+};
+
+const getRandomButtons = (count) => {
   const buttons = Array.from(document.querySelectorAll('.numbers button:not([disabled])'));
+  if (buttons.length < count) return [];
+  return buttons.sort(() => 0.5 - Math.random()).slice(0, count);
+};
 
-  if (buttons.length < count) {
-    return;
-  }
+const shuffle = (count) => {
+  const selectedButtons = getRandomButtons(count);
+  if (selectedButtons.length === 0) return;
 
-  for (let i = buttons.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [buttons[i], buttons[j]] = [buttons[j], buttons[i]];
-  }
+  const parent = selectedButtons[0].parentNode;
+  const fragment = document.createDocumentFragment();
+  selectedButtons.forEach((button) => fragment.appendChild(button));
+  parent.appendChild(fragment);
+};
 
-  const selectedButtons = buttons.slice(0, count);
-  const parent = buttons[0].parentNode;
-  const positions = selectedButtons.map((button) => Array.from(parent.children).indexOf(button));
+const smallFont = (count) => {
+  getRandomButtons(count).forEach((button) => {
+    button.style.fontSize = `${parseFloat(getComputedStyle(button).fontSize) * 0.5}px`;
+  });
+};
 
-  for (let i = 0; i < count; i++) {
-    const currentButton = selectedButtons[i];
-    const nextPosition = positions[(i + 1) % count];
-    const referenceNode = parent.children[nextPosition];
-    parent.insertBefore(currentButton, referenceNode);
-  }
+const convertToRoman = (count) => {
+  const romanNumerals = [
+    { value: 20, numeral: 'XX' },
+    { value: 10, numeral: 'X' },
+    { value: 9, numeral: 'IX' },
+    { value: 5, numeral: 'V' },
+    { value: 4, numeral: 'IV' },
+    { value: 1, numeral: 'I' },
+  ];
+
+  const toRoman = (num) => {
+    return romanNumerals.reduce((result, { value, numeral }) => {
+      while (num >= value) {
+        result += numeral;
+        num -= value;
+      }
+      return result;
+    }, '');
+  };
+
+  getRandomButtons(count).forEach((button) => {
+    button.textContent = toRoman(parseInt(button.dataset.number));
+  });
+};
+
+const convertToKanji = (count) => {
+  const kanjiNumerals = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+
+  const toKanji = (num) => {
+    if (num <= 10) return kanjiNumerals[num];
+    if (num < 20) return '十' + (num % 10 !== 0 ? kanjiNumerals[num % 10] : '');
+    return (
+      kanjiNumerals[Math.floor(num / 10)] + '十' + (num % 10 !== 0 ? kanjiNumerals[num % 10] : '')
+    );
+  };
+
+  getRandomButtons(count).forEach((button) => {
+    const number = parseInt(button.dataset.number);
+    button.textContent = toKanji(number);
+    Object.assign(button.style, {
+      writingMode: 'vertical-rl',
+      textOrientation: 'upright',
+      lineHeight: '1',
+    });
+  });
+};
+
+const reverseText = (count) => {
+  getRandomButtons(count).forEach((button) => {
+    button.textContent = button.textContent.split('').reverse().join('');
+    Object.assign(button.style, {
+      transform: 'scaleX(-1)',
+      display: 'inline-block',
+    });
+  });
 };
