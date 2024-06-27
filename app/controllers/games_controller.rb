@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :set_player, only: %i[show wait watch finish]
-  before_action :set_game, only: %i[show wait finish]
+  before_action :set_game, only: %i[show wait watch finish]
   before_action :redirect_to_root_if_no_game, only: %i[show finish]
   before_action :authenticate_player
 
@@ -13,7 +13,7 @@ class GamesController < ApplicationController
   end
 
   def watch
-    @player.update_columns(status: :watching)
+    @player.update_columns(status: :watching) if @game.present?
   end
 
   def finish

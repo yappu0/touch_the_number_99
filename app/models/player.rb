@@ -1,7 +1,7 @@
 class Player < ApplicationRecord
   extend Enumerize
 
-  enumerize :status, in: %i[waiting playing finished watching]
+  enumerize :status, in: %i[waiting playing finished watching], scope: :shallow
 
   validates :name, presence: true
   validates :player_token, presence: true, uniqueness: true
@@ -9,8 +9,6 @@ class Player < ApplicationRecord
   before_validation :set_player_token, on: :create
 
   scope :default_order, -> { order(:id) }
-  scope :playing, -> { where(status: :playing) }
-  scope :waiting, -> { where(status: :waiting) }
 
   private
 

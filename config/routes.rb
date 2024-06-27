@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resource :home, only: %i[show] do
       post :game_start
     end
+    root 'homes#show'
   end
 
   root 'players#show'

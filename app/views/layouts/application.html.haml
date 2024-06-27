@@ -9,6 +9,7 @@
     = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
     = javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module'
   %body
+    = render 'layouts/flash'
     .min-h-dvh.bg-slate-100.flex.flex-direction-column.justify-content-center
       .max-w-screen-sm.mx-auto.p-8.grow
         = yield
