@@ -6,7 +6,7 @@ export default class extends Controller {
 
   connect () {
     // TODO: 25に直す
-    this.numbers = Array.from({ length: 5 }, (_, i) => i + 1);
+    this.numbers = Array.from({ length: 25 }, (_, i) => i + 1);
     this.currentNumber = 1;
     this.clearCount = 0;
     this.replaceButtonCount = 1;
@@ -40,7 +40,7 @@ export default class extends Controller {
       this.postData('/game/tap', { game_id: this.gameIdValue, player_id: this.playerIdValue });
 
       // TODO: 25に直す
-      if (this.currentNumber > 5) {
+      if (this.currentNumber > 25) {
         this.initGameBoard();
         if (this.hardValue) {
           this.postData('/game/attack', { count: this.replaceButtonCount });
@@ -48,11 +48,11 @@ export default class extends Controller {
       }
       // TODO: 5に直す
       if (this.hardValue) {
-        if (this.clearCount === 2) {
+        if (this.clearCount === 4) {
           this.postData('/game/finish');
         }
       } else {
-        if (this.clearCount === 2) {
+        if (this.clearCount === 3) {
           this.postData('/game/finish');
         }
       }
