@@ -70,11 +70,16 @@ class Game < ApplicationRecord
       Player.playing.find_each do |player|
         REDIS.set("start_time:#{game.id}:#{player.id}", start_time)
         REDIS.zadd("game:#{game.id}", 0, player.id)
+        REDIS.hset("user_names:#{game.id}", player.id, player.name) # ユーザー名を保存
       end
     end
 
     def tap_ranking(game_id)
-      REDIS.zrevrange("game:#{game_id}", 0, -1, with_scores: true)
+      ranking_data = REDIS.zrevrange("game:#{game_id}", 0, -1, with_scores: true)
+      ranking_data.map do |user_id, score|
+        user_name = REDIS.hget("user_names:#{game_id}", user_id) # ユーザー名を取得
+        [user_id, user_name, score]
+      end
     end
 
     def tap_square(game_id, user_id)

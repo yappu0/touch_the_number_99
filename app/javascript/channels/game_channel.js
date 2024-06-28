@@ -30,7 +30,7 @@ document.addEventListener('turbo:load', () => {
         console.log('Received data', data);
 
         if (data.action === 'tap') {
-          this.playerRanking = data.ranking.findIndex(([user_id, _]) => {
+          this.playerRanking = data.ranking.findIndex(([user_id, user_name, _]) => {
             return user_id === this.player_id;
           });
           console.log(this.playerRanking);
@@ -81,9 +81,9 @@ document.addEventListener('turbo:load', () => {
   );
 });
 
-const createRankingElement = (userId, score, rank) => {
+const createRankingElement = (userId, userName, score, rank) => {
   const li = document.createElement('li');
-  li.textContent = `${rank}位: ID:${userId} ${Math.trunc(score / 25)}周目 ${score % 25}タイル`;
+  li.textContent = `${rank}位: ${userName} ${Math.trunc(score / 25) + 1}周目 ${score % 25}タイル`;
   li.classList.add('bg-blue-100', 'border', 'border-blue-200', 'rounded', 'p-2', 'mb-2');
   return li;
 };
@@ -93,9 +93,9 @@ const displayRanking = (rankingData) => {
   rankingContainer.innerHTML = '';  // Clear any existing ranking data
 
   let rank = 0;
-  rankingData.forEach(([userId, score]) => {
+  rankingData.forEach(([userId, userName, score]) => {
     rank += 1;
-    const rankingElement = createRankingElement(userId, score, rank);
+    const rankingElement = createRankingElement(userId, userName, score, rank);
     rankingContainer.appendChild(rankingElement);
   });
 };

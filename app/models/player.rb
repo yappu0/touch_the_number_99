@@ -14,15 +14,27 @@ class Player < ApplicationRecord
     data = Game.tap_ranking(game.id)
 
     # データをtap数が多い順にソート
-    sorted_data = data.sort_by { |_, count| -count }
+    sorted_data = data.sort_by { |_, _, count| -count }
+
+    p 'sorted_data'
+    p sorted_data
+    p sorted_data
+    p sorted_data
+    p 'sorted_data'
 
     # 自分のデータと順位を探す
-    my_data_with_index = sorted_data.each_with_index.find { |(id, _), _| id == self.id.to_s }
+    my_data_with_index = sorted_data.each_with_index.find { |(id, _, _), _| id == self.id.to_s }
+
+    p 'my_data_with_index'
+    p my_data_with_index
+    p my_data_with_index
+    p my_data_with_index
+    p 'my_data_with_index'
 
     if my_data_with_index
       index = my_data_with_index[1]
-      tap_count = my_data_with_index[0][1]
-      rank = index + 1  # インデックスは0から始まるので、順位として表示するには+1する
+      tap_count = my_data_with_index[0][2]
+      rank = index + 1 # インデックスは0から始まるので、順位として表示するには+1する
       { rank: rank, tap_count: tap_count }
     else
       nil

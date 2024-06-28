@@ -4,7 +4,7 @@
     %span.js-current-ranking-number.text-4xl
     位
   .numbers{ data: { 'game-target': 'board' } }
-  .hidden{ data: { 'game-target': 'firstCutIn' } }
+  .hidden.text-2xl{ data: { 'game-target': 'firstCutIn' } }
     %p
       %span.text-blue-700 ステージクリア！
     %p 他のプレイヤーに攻撃しました！
@@ -13,7 +13,7 @@
       現在
       %span.text-3xl.js-cutin-ranking-number.text-blue-700
       位
-  .hidden{ data: { 'game-target': 'secondCutIn' } }
+  .hidden.text-2xl{ data: { 'game-target': 'secondCutIn' } }
     %p
       %span.text-blue-700 ステージクリア！
     %p 他のプレイヤーに攻撃しました！
@@ -21,7 +21,7 @@
       現在
       %span.text-3xl.js-cutin-ranking-number.text-blue-700
       位
-  .hidden{ data: { 'game-target': 'thirdCutIn' } }
+  .hidden.text-2xl{ data: { 'game-target': 'thirdCutIn' } }
     %p
       %span.text-blue-700 ステージクリア！
     %p 他のプレイヤーに攻撃しました！
@@ -30,4 +30,9 @@
       現在
       %span.text-3xl.js-cutin-ranking-number.text-blue-700
       位
-  %ul.js-ranking.mb-6.mt-6
+  .hidden.text-2xl{ data: { 'game-target': 'gameSetCutIn' } }
+    %p
+      %span.text-blue-700 全ステージクリア！
+    %p お疲れ様でした！
+    %p 結果発表までお待ちください
+  %ul.js-ranking.mb-6.mt-6{ data: { 'game-target': 'rankings' } }

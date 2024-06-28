@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['board', 'firstCutIn', 'secondCutIn', 'thirdCutIn', 'currentRanking'];
+  static targets = ['board', 'firstCutIn', 'secondCutIn', 'thirdCutIn', 'gameSetCutIn', 'currentRanking', 'rankings'];
   static values = { gameId: Number, playerId: Number, hard: String };
 
   connect () {
@@ -65,48 +65,80 @@ export default class extends Controller {
     this.replaceButtonCount++;
     this.boardTarget.innerHTML = '';
     if (this.clearCount === 1) {
-      document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+      document.querySelectorAll('.js-cutin-ranking-number').forEach((rankingNumber) => {
+        rankingNumber.textContent = document.querySelector('.js-current-ranking-number').textContent;
+      });
       this.firstCutInTarget.classList.remove('hidden');
       this.currentRankingTarget.classList.add('hidden');
+      this.rankingsTarget.classList.add('hidden');
 
       setTimeout(() => {
         this.firstCutInTarget.classList.add('hidden');
         this.currentRankingTarget.classList.remove('hidden');
+        this.rankingsTarget.classList.remove('hidden');
         this.createGameBoard();
       }, 2000);
     } else if (this.clearCount === 2) {
       if (this.hardValue === 'true') {
-        document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+        document.querySelectorAll('.js-cutin-ranking-number').forEach((rankingNumber) => {
+          rankingNumber.textContent = document.querySelector('.js-current-ranking-number').textContent;
+        });
         this.secondCutInTarget.classList.remove('hidden');
         this.currentRankingTarget.classList.add('hidden');
+        this.rankingsTarget.classList.add('hidden');
 
         setTimeout(() => {
           this.secondCutInTarget.classList.add('hidden');
           this.currentRankingTarget.classList.remove('hidden');
+          this.rankingsTarget.classList.remove('hidden');
           this.createGameBoard();
         }, 2000);
       } else {
-        document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+        document.querySelectorAll('.js-cutin-ranking-number').forEach((rankingNumber) => {
+          rankingNumber.textContent = document.querySelector('.js-current-ranking-number').textContent;
+        });
         this.thirdCutInTarget.classList.remove('hidden');
         this.currentRankingTarget.classList.add('hidden');
+        this.rankingsTarget.classList.add('hidden');
 
         setTimeout(() => {
           this.thirdCutInTarget.classList.add('hidden');
           this.currentRankingTarget.classList.remove('hidden');
+          this.rankingsTarget.classList.remove('hidden');
           this.createGameBoard();
         }, 2000);
       }
 
     } else if (this.clearCount === 3) {
-      document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
-      this.thirdCutInTarget.classList.remove('hidden');
-      this.currentRankingTarget.classList.add('hidden');
+      if (this.hardValue === 'true') {
+        document.querySelectorAll('.js-cutin-ranking-number').forEach((rankingNumber) => {
+          rankingNumber.textContent = document.querySelector('.js-current-ranking-number').textContent;
+        });
+        this.thirdCutInTarget.classList.remove('hidden');
+        this.currentRankingTarget.classList.add('hidden');
+        this.rankingsTarget.classList.add('hidden');
 
-      setTimeout(() => {
-        this.thirdCutInTarget.classList.add('hidden');
-        this.currentRankingTarget.classList.remove('hidden');
-        this.createGameBoard();
-      }, 2000);
+        setTimeout(() => {
+          this.thirdCutInTarget.classList.add('hidden');
+          this.currentRankingTarget.classList.remove('hidden');
+          this.rankingsTarget.classList.remove('hidden');
+          this.createGameBoard();
+        }, 2000);
+      } else {
+        document.querySelectorAll('.js-cutin-ranking-number').forEach((rankingNumber) => {
+          rankingNumber.textContent = document.querySelector('.js-current-ranking-number').textContent;
+        });
+        this.gameSetCutInTarget.classList.remove('hidden');
+        this.currentRankingTarget.classList.add('hidden');
+        this.rankingsTarget.classList.add('hidden');
+      }
+    } else if (this.clearCount === 4) {
+      document.querySelectorAll('.js-cutin-ranking-number').forEach((rankingNumber) => {
+        rankingNumber.textContent = document.querySelector('.js-current-ranking-number').textContent;
+      });
+      this.gameSetCutInTarget.classList.remove('hidden');
+      this.currentRankingTarget.classList.add('hidden');
+      this.rankingsTarget.classList.add('hidden');
     }
   }
 
