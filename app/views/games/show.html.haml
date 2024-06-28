@@ -1,4 +1,4 @@
-%div.numbers-wrapper{ data: { controller: 'game', 'game-game-id-value': @game.id, 'game-player-id-value': @player.id, 'player-id': @player.id, 'game-id': @game.id, 'game-hard-value': params[:hard] } }
+%div.numbers-wrapper{ data: { controller: 'game', 'game-game-id-value': @game.id, 'game-player-id-value': @player.id, 'player-id': @player.id, 'game-id': @game.id, 'game-hard-value': params[:hard].present?.to_s } }
   .text-right{ data: { 'game-target': 'currentRanking' } }
     現在
     %span.js-current-ranking-number.text-4xl

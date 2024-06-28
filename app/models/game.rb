@@ -81,7 +81,6 @@ class Game < ApplicationRecord
       old_ranking = tap_ranking(game_id).slice(0, 5)
       REDIS.zincrby("game:#{game_id}", 1, user_id)
       new_ranking = tap_ranking(game_id).slice(0, 5)
-      new_ranking.map! { |id, score| [Player.find(id).name, score] }
       if old_ranking != new_ranking
         ActionCable.server.broadcast "game_#{game_id}_channel", { action: 'tap', ranking: new_ranking }
       end

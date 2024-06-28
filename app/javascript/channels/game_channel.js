@@ -18,7 +18,7 @@ document.addEventListener('turbo:load', () => {
       connected () {
         this.game_id = document.querySelector('[data-game-id]').dataset.gameId;
         this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
-        this.hard = document.querySelector('[data-game-hard-value]').dataset.hard;
+        this.hard = document.querySelector('[data-game-hard-value]')?.dataset.hard;
         console.log(`Connected to Game${this.game_id}Channel`);
       },
 
@@ -33,8 +33,10 @@ document.addEventListener('turbo:load', () => {
           this.playerRanking = data.ranking.findIndex(([user_id, _]) => {
             return user_id === this.player_id;
           });
+          console.log(this.playerRanking);
+          console.log(data.ranking);
           this.playerScore = data.ranking[this.playerRanking][1];
-          if (this.hard) {
+          if (this.hard === 'true') {
             if (this.playerScore >= 75) {
               document.querySelector('.js-current-ranking-number').textContent = '？';
             } else {
@@ -81,7 +83,7 @@ document.addEventListener('turbo:load', () => {
 
 const createRankingElement = (userId, score, rank) => {
   const li = document.createElement('li');
-  li.textContent = `${rank}位: ${userId} ${Math.trunc(score / 5)}周目 ${score % 5}タイル`;
+  li.textContent = `${rank}位: ID:${userId} ${Math.trunc(score / 25)}周目 ${score % 25}タイル`;
   li.classList.add('bg-blue-100', 'border', 'border-blue-200', 'rounded', 'p-2', 'mb-2');
   return li;
 };

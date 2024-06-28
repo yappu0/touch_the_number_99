@@ -10,8 +10,8 @@
           = "#{@my_ranking[:rank]}位"
       %p.text-sm.text-gray-500.mt-2
         - total_count = @my_ranking[:tap_count].ceil
-        - lap_count = total_count / 5
-        達成度: #{lap_count}周 #{(total_count % 5)}タップ
+        - lap_count = total_count / 25
+        達成度: #{lap_count}周 #{(total_count % 25)}タップ
     .space-y-6
       - @finished_game.time_ranking.each.with_index(1) do |data, rank|
         %div{class: rank_class(rank)}

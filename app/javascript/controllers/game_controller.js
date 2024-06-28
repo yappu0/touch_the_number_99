@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static targets = ['board', 'firstCutIn', 'secondCutIn', 'thirdCutIn', 'currentRanking'];
-  static values = { gameId: Number, playerId: Number, hard: Boolean };
+  static values = { gameId: Number, playerId: Number, hard: String };
 
   connect () {
     // TODO: 25に直す
@@ -42,12 +42,12 @@ export default class extends Controller {
       // TODO: 25に直す
       if (this.currentNumber > 25) {
         this.initGameBoard();
-        if (this.hardValue) {
+        if (this.hardValue === 'true') {
           this.postData('/game/attack', { count: this.replaceButtonCount });
         }
       }
       // TODO: 5に直す
-      if (this.hardValue) {
+      if (this.hardValue === 'true') {
         if (this.clearCount === 4) {
           this.postData('/game/finish');
         }
@@ -75,7 +75,7 @@ export default class extends Controller {
         this.createGameBoard();
       }, 2000);
     } else if (this.clearCount === 2) {
-      if (this.hardValue) {
+      if (this.hardValue === 'true') {
         document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
         this.secondCutInTarget.classList.remove('hidden');
         this.currentRankingTarget.classList.add('hidden');
