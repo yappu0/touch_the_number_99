@@ -1,3 +1,33 @@
 %div.numbers-wrapper{ data: { controller: 'game', 'game-game-id-value': @game.id, 'game-player-id-value': @player.id, 'player-id': @player.id, 'game-id': @game.id, 'game-hard-value': params[:hard] } }
+  .text-right{ data: { 'game-target': 'currentRanking' } }
+    現在
+    %span.js-current-ranking-number.text-4xl
+    位
   .numbers{ data: { 'game-target': 'board' } }
+  .hidden{ data: { 'game-target': 'firstCutIn' } }
+    %p
+      %span.text-blue-700 ステージクリア！
+    %p 他のプレイヤーに攻撃しました！
+    %p まだまだ勝負はこれから！
+    %p
+      現在
+      %span.text-3xl.js-cutin-ranking-number.text-blue-700
+      位
+  .hidden{ data: { 'game-target': 'secondCutIn' } }
+    %p
+      %span.text-blue-700 ステージクリア！
+    %p 他のプレイヤーに攻撃しました！
+    %p
+      現在
+      %span.text-3xl.js-cutin-ranking-number.text-blue-700
+      位
+  .hidden{ data: { 'game-target': 'thirdCutIn' } }
+    %p
+      %span.text-blue-700 ステージクリア！
+    %p 他のプレイヤーに攻撃しました！
+    %p ラストスパート！
+    %p
+      現在
+      %span.text-3xl.js-cutin-ranking-number.text-blue-700
+      位
   %ul.js-ranking.mb-6.mt-6

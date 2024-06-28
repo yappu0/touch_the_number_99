@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['board'];
+  static targets = ['board', 'firstCutIn', 'secondCutIn', 'thirdCutIn', 'currentRanking'];
   static values = { gameId: Number, playerId: Number, hard: Boolean };
 
   connect () {
@@ -64,7 +64,50 @@ export default class extends Controller {
     this.clearCount++;
     this.replaceButtonCount++;
     this.boardTarget.innerHTML = '';
-    this.createGameBoard();
+    if (this.clearCount === 1) {
+      document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+      this.firstCutInTarget.classList.remove('hidden');
+      this.currentRankingTarget.classList.add('hidden');
+
+      setTimeout(() => {
+        this.firstCutInTarget.classList.add('hidden');
+        this.currentRankingTarget.classList.remove('hidden');
+        this.createGameBoard();
+      }, 2000);
+    } else if (this.clearCount === 2) {
+      if (this.hardValue) {
+        document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+        this.secondCutInTarget.classList.remove('hidden');
+        this.currentRankingTarget.classList.add('hidden');
+
+        setTimeout(() => {
+          this.secondCutInTarget.classList.add('hidden');
+          this.currentRankingTarget.classList.remove('hidden');
+          this.createGameBoard();
+        }, 2000);
+      } else {
+        document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+        this.thirdCutInTarget.classList.remove('hidden');
+        this.currentRankingTarget.classList.add('hidden');
+
+        setTimeout(() => {
+          this.thirdCutInTarget.classList.add('hidden');
+          this.currentRankingTarget.classList.remove('hidden');
+          this.createGameBoard();
+        }, 2000);
+      }
+
+    } else if (this.clearCount === 3) {
+      document.querySelector('.js-cutin-ranking-number').textContent = document.querySelector('.js-current-ranking-number').textContent;
+      this.thirdCutInTarget.classList.remove('hidden');
+      this.currentRankingTarget.classList.add('hidden');
+
+      setTimeout(() => {
+        this.thirdCutInTarget.classList.add('hidden');
+        this.currentRankingTarget.classList.remove('hidden');
+        this.createGameBoard();
+      }, 2000);
+    }
   }
 
   async postData (url = '', data = {}) {

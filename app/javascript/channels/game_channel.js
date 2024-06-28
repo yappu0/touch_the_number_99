@@ -17,6 +17,8 @@ document.addEventListener('turbo:load', () => {
     {
       connected () {
         this.game_id = document.querySelector('[data-game-id]').dataset.gameId;
+        this.player_id = document.querySelector('[data-player-id]').dataset.playerId;
+        this.hard = document.querySelector('[data-game-hard-value]').dataset.hard;
         console.log(`Connected to Game${this.game_id}Channel`);
       },
 
@@ -28,6 +30,24 @@ document.addEventListener('turbo:load', () => {
         console.log('Received data', data);
 
         if (data.action === 'tap') {
+          this.playerRanking = data.ranking.findIndex(([user_id, _]) => {
+            return user_id === this.player_id;
+          });
+          this.playerScore = data.ranking[this.playerRanking][1];
+          if (this.hard) {
+            if (this.playerScore >= 75) {
+              document.querySelector('.js-current-ranking-number').textContent = '？';
+            } else {
+              document.querySelector('.js-current-ranking-number').textContent = this.playerRanking + 1;
+            }
+          } else {
+            if (this.playerScore >= 50) {
+              document.querySelector('.js-current-ranking-number').textContent = '？';
+            } else {
+              document.querySelector('.js-current-ranking-number').textContent = this.playerRanking + 1;
+            }
+          }
+
           displayRanking(data.ranking);
         }
 
