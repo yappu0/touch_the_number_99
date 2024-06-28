@@ -1,10 +1,24 @@
-.min-h-dvh.bg-white.flex.flex-col.justify-center.items-center.p-8
+.min-h-dvh.bg-white.flex.flex-col.justify-center.items-center.p-8{ class: 'w-11/12' }
   .max-w-screen-sm.w-full.mx-auto
     %h1.text-3xl.font-bold.text-center.mb-12.text-gray-800 ランキング
+
+    .bg-gray-100.rounded-lg.p-6.mb-8.shadow-md
+      .flex.items-center.justify-between
+        %p.text-2xl.font-bold.text-blue-600
+          あなたの順位:
+        %p.text-3xl.font-extrabold.text-blue-700
+          = "#{@my_ranking[:rank]}位"
+      %p.text-sm.text-gray-500.mt-2
+        - total_count = @my_ranking[:tap_count].ceil
+        - lap_count = total_count / 5
+        達成度: #{lap_count}周 #{(total_count % 5)}タップ
     .space-y-6
-      - @finished_game.time_ranking.each.with_index(1) do |data, index|
-        .border-l-8.border-yellow-400.pl-4.py-2
-          %p.text-2xl.font-bold.text-gray-800 #{index}位 #{Player.find(data[0]).name}さん
-          %p.text-lg.text-gray-600 タイム: #{data[1]}秒
+      - @finished_game.time_ranking.each.with_index(1) do |data, rank|
+        %div{class: rank_class(rank)}
+          %p{class: rank_title_class(rank)}
+            #{rank}位 #{Player.find(data[0]).name}さん
+          %p{class: rank_time_class(rank)}
+            タイム: #{data[1]}秒
+
     .mt-12.text-center
       = link_to "Home画面へ", "/", class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform"
