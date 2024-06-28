@@ -32,11 +32,22 @@ document.addEventListener('turbo:load', () => {
         }
 
         if (data.action === 'game_start') {
-          if (data.hard === true) {
-            window.location.href = '/game?hard=true';
-          } else {
-            window.location.href = '/game';
-          }
+          let countdown = 3;
+          document.getElementById('loader').classList.add('hidden');
+          const countdownElement = document.getElementById('countdown');
+          countdownElement.textContent = countdown;
+          const countdownInterval = setInterval(() => {
+            countdown -= 1;
+            countdownElement.textContent = countdown;
+            if (countdown <= 0) {
+              clearInterval(countdownInterval);
+              if (data.hard === true) {
+                window.location.href = '/game?hard=true';
+              } else {
+                window.location.href = '/game';
+              }
+            }
+          }, 1000);
         }
 
         if (data.action === 'game_set') {
