@@ -44,9 +44,10 @@ document.addEventListener('turbo:load', () => {
   );
 });
 
-const createRankingElement = (userId, score) => {
+const createRankingElement = (userId, score, rank) => {
   const li = document.createElement('li');
-  li.textContent = `一位: ユーザーID：${userId}, 数: ${score}`;
+  li.textContent = `${rank}位: ユーザーID：${userId}, 数: ${score}`;
+  li.classList.add('bg-blue-100', 'border', 'border-blue-200', 'rounded', 'p-2', 'mb-2');
   return li;
 };
 
@@ -54,8 +55,10 @@ const displayRanking = (rankingData) => {
   const rankingContainer = document.querySelector('.js-ranking');
   rankingContainer.innerHTML = '';  // Clear any existing ranking data
 
+  let rank = 0;
   rankingData.forEach(([userId, score]) => {
-    const rankingElement = createRankingElement(userId, score);
+    rank += 1;
+    const rankingElement = createRankingElement(userId, score, rank);
     rankingContainer.appendChild(rankingElement);
   });
 };

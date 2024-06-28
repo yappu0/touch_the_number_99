@@ -53,4 +53,8 @@ class GamesController < ApplicationController
   def authenticate_player
     redirect_to root_path if @player.blank?
   end
+
+  def game?
+    action_name == 'show'
+  end
 end

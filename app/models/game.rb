@@ -25,7 +25,28 @@ class Game < ApplicationRecord
   def attack!(player, count)
     return if status.finished?
 
-    Player.playing.where.not(id: player.id).find_each do |opponent|
+    ranking = Game.tap_ranking(self.id)
+    attack_target_player_ids = []
+    [{ rank_range: 0..0.1, hit_rate: 0.75 }, { rank_range: 0.1..0.25, hit_rate: 0.5 }, { rank_range: 0.25..0.5, hit_rate: 0.25 }, { rank_range: 0.5..75, hit_rate: 0.15 }].each do |hash|
+      rank_range, hit_rate = hash
+      ranking.each_with_index do |(player_id, _), index|
+        if rank_range.include?(index.to_f / ranking.size)
+          attack_target_player_ids << player_id if rand < hit_rate
+        end
+        if attack_target_player_ids.size > 0
+          break
+        end
+      end
+    end
+
+    # 対象がいなければ全体の１割をランダム。うまいことやってもっといい感じにしたい
+    if attack_target_player_ids.empty?
+      target_count = (ranking.count * 0.1).to_i
+      target_count = 1 if target_count == 0
+      attack_target_player_ids = Player.playing.where.not(id: player.id).sample(target_count).pluck(:id)
+    end
+
+    Player.playing.where(id: attack_target_player_ids).where.not(id: player.id).find_each do |opponent|
       ActionCable.server.broadcast "game_#{self.id}_player_#{opponent.id}_channel", { action: 'attack', count: }
     end
   end
