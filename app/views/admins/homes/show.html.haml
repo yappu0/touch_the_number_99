@@ -1,6 +1,7 @@
 - unless Game.in_progress.exists?
   %p "待機中のプレイヤー：#{Player.where(status: :waiting).count}人"
   = button_to 'ゲーム開始', game_start_admins_home_path, method: :post, data: { turbo_confirm: 'ゲーム開始しますか？' }, class: 'bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'
+  = button_to 'ゲーム開始（ハード）', game_start_admins_home_path(hard: true), method: :post, data: { turbo_confirm: 'ゲーム（ハード）を開始しますか？' }, class: 'bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'
 
 
 = button_to 'ゲーム全削除', admins_game_path, method: :delete, class: 'bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'

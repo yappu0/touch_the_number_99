@@ -32,7 +32,11 @@ document.addEventListener('turbo:load', () => {
         }
 
         if (data.action === 'game_start') {
-          window.location.href = '/game';
+          if (data.hard === true) {
+            window.location.href = '/game?hard=true';
+          } else {
+            window.location.href = '/game';
+          }
         }
 
         if (data.action === 'game_set') {

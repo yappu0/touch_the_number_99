@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static targets = ['board'];
-  static values = { gameId: Number, playerId: Number };
+  static values = { gameId: Number, playerId: Number, hard: Boolean };
 
   connect () {
     // TODO: 25に直す
@@ -42,11 +42,19 @@ export default class extends Controller {
       // TODO: 25に直す
       if (this.currentNumber > 25) {
         this.initGameBoard();
-        this.postData('/game/attack', { count: this.replaceButtonCount });
+        if (this.hardValue) {
+          this.postData('/game/attack', { count: this.replaceButtonCount });
+        }
       }
       // TODO: 5に直す
-      if (this.clearCount === 3) {
-        this.postData('/game/finish');
+      if (this.hardValue) {
+        if (this.clearCount === 4) {
+          this.postData('/game/finish');
+        }
+      } else {
+        if (this.clearCount === 3) {
+          this.postData('/game/finish');
+        }
       }
     }
   }

@@ -61,11 +61,11 @@ class Game < ApplicationRecord
   end
 
   class << self
-    def start!
+    def start!(hard: false)
       game = Game.waiting.last
       game.update!(status: 'in_progress')
       Player.waiting.update_all(status: 'playing')
-      ActionCable.server.broadcast "game_#{game.id}_channel", { action: 'game_start', game_id: game.id }
+      ActionCable.server.broadcast "game_#{game.id}_channel", { action: 'game_start', game_id: game.id, hard: }
       start_time = Time.current.to_i.to_s
       Player.playing.find_each do |player|
         REDIS.set("start_time:#{game.id}:#{player.id}", start_time)
