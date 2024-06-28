@@ -61,7 +61,7 @@ document.addEventListener('turbo:load', () => {
 
 const createRankingElement = (userId, score, rank) => {
   const li = document.createElement('li');
-  li.textContent = `${rank}位: ユーザーID：${userId}, 数: ${score}`;
+  li.textContent = `${rank}位: ${userId} ${Math.trunc(score / 5)}周目 ${score % 5}タイル`;
   li.classList.add('bg-blue-100', 'border', 'border-blue-200', 'rounded', 'p-2', 'mb-2');
   return li;
 };

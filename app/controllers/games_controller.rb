@@ -34,6 +34,7 @@ class GamesController < ApplicationController
 
   def result
     @finished_game = Game.finished.last
+    @my_ranking = @player.my_ranking(@finished_game)
   end
 
   private
