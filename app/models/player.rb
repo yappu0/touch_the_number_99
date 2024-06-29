@@ -11,31 +11,20 @@ class Player < ApplicationRecord
   scope :default_order, -> { order(:id) }
 
   def my_ranking(game)
-    data = Game.tap_ranking(game.id)
+    tap_rankings = Game.tap_ranking(game.id)
+    elapsed_times = tap_rankings.map(&:first).map do |user_id|
+      REDIS.get("elapsed_time:#{game.id}:#{user_id}")
+    end
+    tap_rankings.zip(elapsed_times).each { |item, time| item << time }
+    sorted_data = tap_rankings.sort_by { |_, _, count, time| [-count, time.to_i] }
 
-    # データをtap数が多い順にソート
-    sorted_data = data.sort_by { |_, _, count| -count }
-
-    p 'sorted_data'
-    p sorted_data
-    p sorted_data
-    p sorted_data
-    p 'sorted_data'
-
-    # 自分のデータと順位を探す
     my_data_with_index = sorted_data.each_with_index.find { |(id, _, _), _| id == self.id.to_s }
-
-    p 'my_data_with_index'
-    p my_data_with_index
-    p my_data_with_index
-    p my_data_with_index
-    p 'my_data_with_index'
-
     if my_data_with_index
       index = my_data_with_index[1]
+      rank = index + 1
       tap_count = my_data_with_index[0][2]
-      rank = index + 1 # インデックスは0から始まるので、順位として表示するには+1する
-      { rank: rank, tap_count: tap_count }
+      elapsed_time = my_data_with_index[0][3]
+      { rank: rank, tap_count: tap_count, elapsed_time: }
     else
       nil
     end
