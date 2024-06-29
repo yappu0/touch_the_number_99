@@ -17,5 +17,7 @@ Rails.application.routes.draw do
     root 'homes#show'
   end
 
+  get 'qr', to: 'games#qr'
+
   root 'players#show'
 end

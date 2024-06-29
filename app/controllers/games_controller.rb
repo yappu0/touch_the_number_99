@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_player, only: %i[show wait watch finish attack result]
   before_action :set_game, except: %i[tap]
   before_action :redirect_to_root_if_no_game, only: %i[show finish]
-  before_action :authenticate_player, except: %i[tap]
+  before_action :authenticate_player, except: %i[tap qr]
 
   def show
   end
@@ -35,6 +35,10 @@ class GamesController < ApplicationController
   def result
     @finished_game = Game.finished.last
     @my_ranking = @player.my_ranking(@finished_game)
+  end
+
+  def qr
+
   end
 
   private
