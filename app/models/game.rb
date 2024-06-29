@@ -57,7 +57,7 @@ class Game < ApplicationRecord
       user_id = key.split(':').last
       elapsed_time = REDIS.get(key)
       [user_id, elapsed_time]
-    end.sort_by { |_, elapsed_time| elapsed_time }
+    end.sort_by { |_, elapsed_time| elapsed_time.to_i }
   end
 
   class << self
