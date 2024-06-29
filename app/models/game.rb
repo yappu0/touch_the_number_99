@@ -85,9 +85,9 @@ class Game < ApplicationRecord
     end
 
     def tap_square(game_id, user_id)
-      old_ranking = tap_ranking(game_id).slice(0, 5)
+      old_ranking = tap_ranking(game_id)
       REDIS.zincrby("game:#{game_id}", 1, user_id)
-      new_ranking = tap_ranking(game_id).slice(0, 5)
+      new_ranking = tap_ranking(game_id)
       if old_ranking != new_ranking
         ActionCable.server.broadcast "game_#{game_id}_channel", { action: 'tap', ranking: new_ranking }
       end
