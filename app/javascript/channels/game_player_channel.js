@@ -102,10 +102,10 @@ const convertToRoman = (count) => {
 
   const selectedButtons = getRandomButtons(count);
   selectedButtons.forEach((button) => {
-    button.textContent = toRoman(parseInt(button.dataset.number));
-    if (Number(button.dataset.number) >= 20) {
-      button.fontSize = '20px';
+    if (Number(button.dataset.number) === 23) {
+      return;
     }
+    button.textContent = toRoman(parseInt(button.dataset.number));
   });
   applyRandomAnimation(selectedButtons);
 };
