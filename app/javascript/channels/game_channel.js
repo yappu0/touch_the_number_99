@@ -87,8 +87,19 @@ document.addEventListener('turbo:load', () => {
 
 const createRankingElement = (userId, userName, score, rank) => {
   const li = document.createElement('li');
-  li.textContent = `${rank}位: ${userName} ${Math.trunc(score / 25) + 1}周目 ${score % 25}タイル`;
-  li.classList.add('bg-blue-100', 'border', 'border-blue-200', 'rounded', 'p-2', 'mb-2');
+  const truncate = (str, len) => {
+    return str.length <= len ? str : (str.substr(0, len) + '...');
+  };
+  userName = truncate(userName, 6);
+  li.textContent = `${rank}位: ${userName} ${Math.trunc(score / 25) + 1}ステージ ${score % 25}タッチ`;
+  li.classList.add('border', 'rounded', 'p-2', 'mb-2');
+  if (rank === 1) {
+    li.classList.add('bg-yellow-400', 'border-yellow-400', 'text-base');
+  } else if (rank === 2) {
+    li.classList.add('bg-yellow-100', 'border-yellow-200', 'text-base');
+  } else if (rank === 3) {
+    li.classList.add('bg-gray-100', 'border-gray-200', 'text-base');
+  }
   return li;
 };
 
@@ -97,7 +108,7 @@ const displayRanking = (rankingData) => {
   rankingContainer.innerHTML = '';  // Clear any existing ranking data
 
   let rank = 0;
-  rankingData.forEach(([userId, userName, score]) => {
+  rankingData.slice(0, 3).forEach(([userId, userName, score]) => {
     rank += 1;
     const rankingElement = createRankingElement(userId, userName, score, rank);
     rankingContainer.appendChild(rankingElement);
