@@ -1,4 +1,6 @@
 class Admins::HomesController < ApplicationController
+  before_action :basic_auth
+
   def show
   end
 
@@ -9,6 +11,14 @@ class Admins::HomesController < ApplicationController
     else
       Game.start!
       redirect_to admins_home_url, notice: 'ゲームを開始しました'
+    end
+  end
+
+  private
+
+  def basic_auth
+    authenticate_or_request_with_http_basic do |username, password|
+      username == 'admin' && password == 'b2AY)ZiK'
     end
   end
 end
