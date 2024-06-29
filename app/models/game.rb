@@ -29,7 +29,7 @@ class Game < ApplicationRecord
 
     ranking = Game.tap_ranking(self.id)
     attack_target_player_ids = []
-    [{ rank_range: 0..0.1, hit_rate: 0.75 }, { rank_range: 0.1..0.25, hit_rate: 0.5 }, { rank_range: 0.25..0.5, hit_rate: 0.25 }, { rank_range: 0.5..75, hit_rate: 0.15 }].each do |hash|
+    [{ rank_range: 0..0.25, hit_rate: 0.5 }, { rank_range: 0.25..0.50, hit_rate: 0.4 }, { rank_range: 0.50..0.5, hit_rate: 0.25 }, { rank_range: 0.5..0.75, hit_rate: 0.15 }].each do |hash|
       rank_range, hit_rate = hash
       ranking.each_with_index do |(player_id, _), index|
         if rank_range.include?(index.to_f / ranking.size)
