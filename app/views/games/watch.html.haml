@@ -2,13 +2,10 @@
   %h1.text-white.text-center.text-3xl.font-bold Touch the Number 99
 %main.max-w-screen-sm.mx-auto.p-8.bg-white.rounded.shadow-md.mt-6.text-center
   %div
-    %h2.text-2xl.font-semibold.text-gray-800.mb-6 ゲームの開始を待っています...
+    %h2.text-2xl.font-semibold.text-gray-800.mb-6 他プレイヤーがゲームをプレイ中です...
     %p.text-gray-700.mb-6
-      他のプレイヤーの準備が整うまでお待ちください。
-      %br
-      ゲームは間もなく始まります。
-    .flex.justify-center.mt-8
-      .loader.ease-linear.rounded-full.border-8.border-t-8.fborder-gray-200.h-32.w-32
+      ホーム画面に戻って次回ゲーム開始までお待ちください。
+    = link_to "ホーム画面へ", root_path, class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform"
 %footer.bg-blue-600.w-full.fpy-4.mt-auto
   %p.text-white.text-center &copy; 2024 Touch the Number 99. All Rights Reserved.
 :css

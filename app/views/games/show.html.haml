@@ -7,8 +7,9 @@
   .hidden.text-2xl{ data: { 'game-target': 'firstCutIn' } }
     %p
       %span.text-blue-700 ステージクリア！
-    %p 他のプレイヤーに攻撃しました！
-    %p まだまだ勝負はこれから！
+    - if  params[:hard].present?
+      %p 他のプレイヤーに攻撃しました！
+    %p どんどんいこう！
     %p
       現在
       %span.text-3xl.js-cutin-ranking-number.text-blue-700
@@ -16,7 +17,9 @@
   .hidden.text-2xl{ data: { 'game-target': 'secondCutIn' } }
     %p
       %span.text-blue-700 ステージクリア！
-    %p 他のプレイヤーに攻撃しました！
+    - if  params[:hard].present?
+      %p 他のプレイヤーに攻撃しました！
+    %p 勝負はこれからだ！
     %p
       現在
       %span.text-3xl.js-cutin-ranking-number.text-blue-700
@@ -24,7 +27,8 @@
   .hidden.text-2xl{ data: { 'game-target': 'thirdCutIn' } }
     %p
       %span.text-blue-700 ステージクリア！
-    %p 他のプレイヤーに攻撃しました！
+    - if  params[:hard].present?
+      %p 他のプレイヤーに攻撃しました！
     %p ラストスパート！
     %p
       現在
