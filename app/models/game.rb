@@ -11,8 +11,7 @@ class Game < ApplicationRecord
     elapsed_time = end_time - start_time
     player.update(status: 'finished')
     REDIS.set("elapsed_time:#{self.id}:#{player.id}", elapsed_time)
-    self.clear_count += 1
-    self.save!
+    self.update_column(:clear_count, self.clear_count + 1)
     ActionCable.server.broadcast "game_#{self.id}_player_#{player.id}_channel", { action: 'finish' }
     game_set if self.clear_count * 2 > Player.playing.count
   end
