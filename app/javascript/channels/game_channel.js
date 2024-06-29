@@ -60,8 +60,12 @@ document.addEventListener('turbo:load', () => {
           countdownElement.textContent = countdown;
           const countdownInterval = setInterval(() => {
             countdown -= 1;
-            countdownElement.textContent = countdown;
-            if (countdown <= 0) {
+            if (countdown > 0) {
+              countdownElement.textContent = countdown;
+            } else if (countdown === 0) {
+              countdownElement.textContent = 'START！';
+            }
+            if (countdown < 0) {
               clearInterval(countdownInterval);
               if (data.hard === true) {
                 window.location.href = '/game?hard=true';
